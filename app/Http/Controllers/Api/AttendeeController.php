@@ -21,6 +21,7 @@ class AttendeeController extends Controller
     public  function __construct()
     {
         $this->middleware('auth:sanctum')->except(['index','show','update']);
+        $this->authorizeResource(Attendee::class,'attendee');
     }
 
     /**
@@ -68,7 +69,7 @@ class AttendeeController extends Controller
      */
     public function destroy(Event $event, Attendee $attendee)
     {
-        $this->authorize('delete-attendee',[$event, $attendee]);
+     //   $this->authorize('delete-attendee',[$event, $attendee]);
 
         $attendee->delete();
         return response(status:204); //deleted now  not found
