@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Event;
+use App\Notifications\EventReminderNotification;
 use GuzzleHttp\Promise\Each;
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
@@ -38,7 +39,11 @@ class SendEventRemainders extends Command
         //notify attendees of each event
         $events->each(
             fn($event) => $event->attendees->each(
-                fn($attendee) => $this->info("Notifying user: {$attendee->user->id} an event will happen soon")));
+                fn($attendee) => $attendee->user->notify(
+                    new EventReminderNotification($event)
+                )
+            )
+        );
 
         $this->info('Reminder notifications sent successfully');
     }
